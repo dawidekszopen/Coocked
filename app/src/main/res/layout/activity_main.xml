@@ -18,6 +18,7 @@
     />
 
     <Button
+        android:id="@+id/DodajPrzepis"
         android:layout_gravity="center"
         android:text="Dodaj przepis"
         android:layout_width="wrap_content"

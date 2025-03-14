@@ -2,10 +2,13 @@ package com.example.mobilecookbook
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import com.example.mobilecookbook.ui.AddRecipeFragment
 import com.example.mobilecookbook.ui.RecipeListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +26,15 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.mainFrameLayout, RecipeListFragment())
             .commit()
 
+        val DodajPrzepis: Button = findViewById(R.id.DodajPrzepis)
 
+        DodajPrzepis.setOnClickListener {
+            replaceFragment(AddRecipeFragment())
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragment)
+            .addToBackStack(null).commit()
     }
 }
