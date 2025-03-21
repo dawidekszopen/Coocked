@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.mobilecookbook.ui.AddRecipeFragment
+import com.example.mobilecookbook.ui.RecipeDetailsFragment
 import com.example.mobilecookbook.ui.RecipeListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -41,9 +42,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment){
-        supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragment)
-            .addToBackStack(null).commit()
+    fun replaceFragment(fragment: Fragment, isDetails: Boolean = false, nrPrzepisu: Int = 0){
+        if(isDetails){
+            val fragmentDetail = RecipeDetailsFragment().apply {
+              arguments = Bundle().apply {
+                  putInt("nrPrzepisu", nrPrzepisu)
+              }
+            }
+
+            supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragmentDetail)
+                .addToBackStack(null).commit()
+        }
+        else{
+            supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragment)
+                .addToBackStack(null).commit()
+        }
     }
 
 
@@ -67,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(RecipeListFragment())
     }
 
-    fun getRecipe(nrPrzepisu: Int): RecipeData {
+    fun getRecipe(nrPrzepisu: Int?): RecipeData {
         val recipeSP = getSharedPreferences(nrPrzepisu.toString(), MODE_PRIVATE)
 
         return RecipeData(
