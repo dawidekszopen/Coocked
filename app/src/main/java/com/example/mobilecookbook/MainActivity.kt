@@ -1,5 +1,7 @@
 package com.example.mobilecookbook
 
+
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -12,6 +14,9 @@ import com.example.mobilecookbook.ui.AddRecipeFragment
 import com.example.mobilecookbook.ui.RecipeListFragment
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var MAINSP: SharedPreferences
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -21,6 +26,9 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        MAINSP = getSharedPreferences("init", MODE_PRIVATE)
+
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.mainFrameLayout, RecipeListFragment())
@@ -36,5 +44,26 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment){
         supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragment)
             .addToBackStack(null).commit()
+    }
+
+
+    public fun saveNewRecipe(Przepis: RecipeData){
+        Log.i("test", "dizała")
+
+        val recipeSP = getSharedPreferences(MAINSP.getInt("recipeLen", 0).toString(), MODE_PRIVATE)
+
+        val editorRecipe = recipeSP.edit()
+        editorRecipe.putString("nazwa", Przepis.nazwa)
+        editorRecipe.putString("opis", Przepis.opis)
+        editorRecipe.putString("skladniki", Przepis.skladniki)
+        editorRecipe.putString("instrukcje", Przepis.intrukcja)
+        editorRecipe.putFloat("ocena", Przepis.ocena)
+        editorRecipe.apply()
+
+        val editorMAINSP = MAINSP.edit()
+        editorMAINSP.putInt("recipeLen", MAINSP.getInt("recipeLen", 0)+1)
+        editorMAINSP.apply()
+
+        replaceFragment(RecipeListFragment())
     }
 }

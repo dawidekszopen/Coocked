@@ -1,11 +1,17 @@
 package com.example.mobilecookbook.ui
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RatingBar
+import com.example.mobilecookbook.MainActivity
 import com.example.mobilecookbook.R
+import com.example.mobilecookbook.RecipeData
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,7 +23,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AddRecipeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AddRecipeFragment : Fragment() {
+class AddRecipeFragment() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -36,6 +42,34 @@ class AddRecipeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_recipe, container, false)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        val button: Button = view.findViewById(R.id.AddRecipeBtn)
+
+
+        val nazwa: EditText = view.findViewById(R.id.nazwaNR)
+        val opis: EditText = view.findViewById(R.id.opisNR)
+        val skladniki: EditText = view.findViewById(R.id.skladnikiNR)
+        val instrukcja: EditText = view.findViewById(R.id.instrukcjaNR)
+        val ocena: RatingBar = view.findViewById(R.id.ocenaNR)
+
+        button.setOnClickListener {
+            val newRecipe = RecipeData(
+                nazwa.text.toString(),
+                opis.text.toString(),
+                skladniki.text.toString(),
+                instrukcja.text.toString(),
+                ocena.rating,
+            )
+
+
+            (requireActivity() as MainActivity).saveNewRecipe(newRecipe)
+        }
     }
 
     companion object {

@@ -25,11 +25,10 @@ private const val ARG_PARAM2 = "param2"
 class RecipeListFragment : Fragment() {
 
     val list = mutableListOf(
-        RecipeData("test", "test", 2f),
-        RecipeData("test", "test", 2f),
-        RecipeData("test", "test", 2f),
-        RecipeData("test", "test", 2f),
-        RecipeData("test", "test", 2f)
+        RecipeData("test", "test", "", "", 2f),
+        RecipeData("test", "test", "", "", 2f),
+        RecipeData("test", "test", "", "", 2f),
+        RecipeData("test", "test", "", "", 2f),
     )
 
 
