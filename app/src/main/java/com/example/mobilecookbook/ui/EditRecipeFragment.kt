@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.RatingBar
-import android.widget.TextView
 import com.example.mobilecookbook.MainActivity
 import com.example.mobilecookbook.R
 import com.example.mobilecookbook.RecipeData
@@ -17,13 +17,12 @@ import com.example.mobilecookbook.RecipeData
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-
 /**
  * A simple [Fragment] subclass.
- * Use the [RecipeDetailsFragment.newInstance] factory method to
+ * Use the [EditRecipeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RecipeDetailsFragment : Fragment() {
+class EditRecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -41,46 +40,45 @@ class RecipeDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_details, container, false)
+        return inflater.inflate(R.layout.fragment_edit_recipe, container, false)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val przepis: RecipeData = (requireActivity() as MainActivity).getRecipe(arguments?.getInt("nrPrzepisu"))
+//        val przepis = (requireActivity() as MainActivity).getRecipe(arguments?.getInt("nrPrzepisu"))
 
-        val nazwa: TextView = view.findViewById(R.id.nazwaR)
-        val opis: TextView = view.findViewById(R.id.opisR)
-        val skladniki: TextView = view.findViewById(R.id.skladnikiR)
-        val intrukcja: TextView = view.findViewById(R.id.instrukcjeR)
-        val ocena: RatingBar = view.findViewById(R.id.ocenaR)
 
-        val editButton: Button = view.findViewById(R.id.EditPrzepis)
+        val button: Button = view.findViewById(R.id.AddRecipeBtn)
 
-        nazwa.text = przepis.nazwa
-        opis.text = przepis.opis
-        skladniki.text = przepis.skladniki
-        intrukcja.text = przepis.intrukcja
-        ocena.rating = przepis.ocena
-        
-        ocena.setOnRatingBarChangeListener { _, rating, _ ->
-            val newPrzepis = RecipeData(
-                przepis.nazwa,
-                przepis.opis,
-                przepis.skladniki,
-                przepis.intrukcja,
-                rating
+
+        val nazwa: EditText = view.findViewById(R.id.nazwaNR)
+        val opis: EditText = view.findViewById(R.id.opisNR)
+        val skladniki: EditText = view.findViewById(R.id.skladnikiNR)
+        val instrukcja: EditText = view.findViewById(R.id.instrukcjaNR)
+        val ocena: RatingBar = view.findViewById(R.id.ocenaNR)
+//
+//        nazwa.setText(przepis.nazwa)
+//        opis.setText(przepis.opis)
+//        skladniki.setText(przepis.skladniki)
+//        instrukcja.setText(przepis.intrukcja)
+//
+//        ocena.rating = przepis.ocena
+
+        button.setOnClickListener {
+            val newRecipe = RecipeData(
+                nazwa.text.toString(),
+                opis.text.toString(),
+                skladniki.text.toString(),
+                instrukcja.text.toString(),
+                ocena.rating,
             )
 
-            (requireActivity() as MainActivity).edidRecipe(newPrzepis, arguments?.getInt("nrPrzepisu"))
-        }
 
-        editButton.setOnClickListener {
-            (requireActivity() as MainActivity).replaceFragment(EditRecipeFragment(), true, arguments?.getInt("nrPrzepisu"))
-
+            (requireActivity() as MainActivity).saveNewRecipe(newRecipe)
         }
     }
-
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -88,17 +86,12 @@ class RecipeDetailsFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment RecipeDetailsFragment.
+         * @return A new instance of fragment EditRecipeFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String,
-                        nazwa: String,
-                        opis: String,
-                        skladniki: String,
-                        intrukcja: String,
-                        ocena: Float,) =
-            RecipeDetailsFragment().apply {
+        fun newInstance(param1: String, param2: String) =
+            EditRecipeFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

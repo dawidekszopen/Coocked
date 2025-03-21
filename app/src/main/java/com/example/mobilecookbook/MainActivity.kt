@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.mobilecookbook.ui.AddRecipeFragment
-import com.example.mobilecookbook.ui.RecipeDetailsFragment
 import com.example.mobilecookbook.ui.RecipeListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -42,15 +41,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun replaceFragment(fragment: Fragment, isDetails: Boolean = false, nrPrzepisu: Int = 0){
-        if(isDetails){
-            val fragmentDetail = RecipeDetailsFragment().apply {
+    fun replaceFragment(fragment: Fragment, withArg: Boolean = false, nrPrzepisu: Int? = 0){
+        if(withArg){
+            val newFragment = fragment.apply {
               arguments = Bundle().apply {
-                  putInt("nrPrzepisu", nrPrzepisu)
+                  if (nrPrzepisu != null) {
+                      putInt("nrPrzepisu", nrPrzepisu)
+                  }
               }
             }
 
-            supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragmentDetail)
+            supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, newFragment)
                 .addToBackStack(null).commit()
         }
         else{
@@ -93,4 +94,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getLenRecipy(): Int = MAINSP.getInt("recipeLen", 0)
+
+    fun edidRecipe(Przepis: RecipeData, id: Int?){
+
+        val recipeSP = getSharedPreferences(id.toString(), MODE_PRIVATE)
+
+        val editorRecipe = recipeSP.edit()
+        editorRecipe.putString("nazwa", Przepis.nazwa)
+        editorRecipe.putString("opis", Przepis.opis)
+        editorRecipe.putString("skladniki", Przepis.skladniki)
+        editorRecipe.putString("instrukcje", Przepis.intrukcja)
+        editorRecipe.putFloat("ocena", Przepis.ocena)
+        editorRecipe.apply()
+    }
 }
