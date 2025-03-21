@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    public fun saveNewRecipe(Przepis: RecipeData){
+    fun saveNewRecipe(Przepis: RecipeData){
         Log.i("test", "dizała")
 
         val recipeSP = getSharedPreferences(MAINSP.getInt("recipeLen", 0).toString(), MODE_PRIVATE)
@@ -66,4 +66,18 @@ class MainActivity : AppCompatActivity() {
 
         replaceFragment(RecipeListFragment())
     }
+
+    fun getRecipe(nrPrzepisu: Int): RecipeData {
+        val recipeSP = getSharedPreferences(nrPrzepisu.toString(), MODE_PRIVATE)
+
+        return RecipeData(
+            recipeSP.getString("nazwa", "ups coś poszło nie tak")!!,
+            recipeSP.getString("opis", "ups coś poszło nie tak")!!,
+            recipeSP.getString("skladniki", "ups coś poszło nie tak")!!,
+            recipeSP.getString("instrukcje", "ups coś poszło nie tak")!!,
+            recipeSP.getFloat("ocena", 0f)
+        )
+    }
+
+    fun getLenRecipy(): Int = MAINSP.getInt("recipeLen", 0)
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilecookbook.MainActivity
 import com.example.mobilecookbook.R
 import com.example.mobilecookbook.RecipeData
 import com.example.mobilecookbook.RecipeList
@@ -58,7 +59,7 @@ class RecipeListFragment : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewRecipe)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        val adapter = RecipeList(list)
+        val adapter = RecipeList((requireActivity() as MainActivity))
 
         recyclerView.adapter = adapter
     }
