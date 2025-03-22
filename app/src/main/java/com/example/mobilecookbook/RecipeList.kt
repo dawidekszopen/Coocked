@@ -3,6 +3,7 @@ package com.example.mobilecookbook
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,8 @@ class RecipeList(private val mainActivity: MainActivity, private val onDoubleCli
         val opis = itemView.findViewById<TextView>(R.id.opis)
         val ocena = itemView.findViewById<RatingBar>(R.id.ocena)
         val hr = itemView.findViewById<View>(R.id.hr)
+
+        val image = itemView.findViewById<ImageView>(R.id.image)
 
         private var lastClickTime = 0L
         private val doubleClickThreshold = 300L // 300ms na podwójne kliknięcie
@@ -43,6 +46,12 @@ class RecipeList(private val mainActivity: MainActivity, private val onDoubleCli
         holder.nazwa.text = curentItem.nazwa
         holder.opis.text = curentItem.opis
         holder.ocena.rating = curentItem.ocena
+
+        val bitmap = mainActivity.loadSavedImage(position)
+
+        if(bitmap != null){
+            holder.image.setImageBitmap(mainActivity.loadSavedImage(position))
+        }
 
         if (position == mainActivity.getLenRecipy()-1) {
             holder.hr.visibility = View.INVISIBLE

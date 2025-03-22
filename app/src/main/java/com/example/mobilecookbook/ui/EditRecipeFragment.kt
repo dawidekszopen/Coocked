@@ -1,5 +1,6 @@
 package com.example.mobilecookbook.ui
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,10 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RatingBar
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.mobilecookbook.MainActivity
 import com.example.mobilecookbook.R
 import com.example.mobilecookbook.RecipeData
+import java.io.File
+import java.io.FileOutputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +31,8 @@ class EditRecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var image: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,24 +54,38 @@ class EditRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val przepis = (requireActivity() as MainActivity).getRecipe(arguments?.getInt("nrPrzepisu"))
+
+        val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()){ uri: Uri? ->
+            uri?.let{
+                saveImage(it)
+            }
+        }
+
+
+        val przepis = (requireActivity() as MainActivity).getRecipe(arguments?.getInt("nrPrzepisu"))
 
 
         val button: Button = view.findViewById(R.id.AddRecipeBtn)
 
 
-        val nazwa: EditText = view.findViewById(R.id.nazwaNR)
-        val opis: EditText = view.findViewById(R.id.opisNR)
-        val skladniki: EditText = view.findViewById(R.id.skladnikiNR)
-        val instrukcja: EditText = view.findViewById(R.id.instrukcjaNR)
-        val ocena: RatingBar = view.findViewById(R.id.ocenaNR)
-//
-//        nazwa.setText(przepis.nazwa)
-//        opis.setText(przepis.opis)
-//        skladniki.setText(przepis.skladniki)
-//        instrukcja.setText(przepis.intrukcja)
-//
-//        ocena.rating = przepis.ocena
+        val nazwa: EditText = view.findViewById(R.id.nazwaER)
+        val opis: EditText = view.findViewById(R.id.opisER)
+        val skladniki: EditText = view.findViewById(R.id.skladnikiER)
+        val instrukcja: EditText = view.findViewById(R.id.instrukcjaER)
+        val ocena: RatingBar = view.findViewById(R.id.ocenaER)
+
+        image = view.findViewById(R.id.imageER)
+
+        image.setOnClickListener {
+            pickImage.launch("image/*")
+        }
+
+        nazwa.setText(przepis.nazwa)
+        opis.setText(przepis.opis)
+        skladniki.setText(przepis.skladniki)
+        instrukcja.setText(przepis.intrukcja)
+
+        ocena.rating = przepis.ocena
 
         button.setOnClickListener {
             val newRecipe = RecipeData(
@@ -76,9 +97,27 @@ class EditRecipeFragment : Fragment() {
             )
 
 
-            (requireActivity() as MainActivity).saveNewRecipe(newRecipe)
+            (requireActivity() as MainActivity).edidRecipe(newRecipe, arguments?.getInt("nrPrzepisu"))
+            (requireActivity() as MainActivity).replaceFragment(RecipeListFragment())
         }
     }
+
+    private fun saveImage(imageUri: Uri){
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+            val file = File(requireContext().filesDir, "${arguments?.getInt("nrPrzepisu")}.png")
+            val outputstream = FileOutputStream(file)
+
+            inputStream?.copyTo(outputstream)
+            inputStream?.close()
+            outputstream.close()
+            image.setImageBitmap((requireActivity() as MainActivity).loadSavedImage(arguments?.getInt("nrPrzepisu")))
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

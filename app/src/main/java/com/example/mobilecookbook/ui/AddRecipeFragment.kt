@@ -1,17 +1,24 @@
 package com.example.mobilecookbook.ui
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RatingBar
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.mobilecookbook.MainActivity
 import com.example.mobilecookbook.R
 import com.example.mobilecookbook.RecipeData
+import java.io.File
+import java.io.FileOutputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +34,8 @@ class AddRecipeFragment() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var image: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +57,13 @@ class AddRecipeFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()){ uri: Uri? ->
+            uri?.let{
+                saveImage(it)
+            }
+        }
+
+
 
         val button: Button = view.findViewById(R.id.AddRecipeBtn)
 
@@ -57,6 +73,12 @@ class AddRecipeFragment() : Fragment() {
         val skladniki: EditText = view.findViewById(R.id.skladnikiNR)
         val instrukcja: EditText = view.findViewById(R.id.instrukcjaNR)
         val ocena: RatingBar = view.findViewById(R.id.ocenaNR)
+
+        image = view.findViewById(R.id.imageNR)
+
+        image.setOnClickListener {
+            pickImage.launch("image/*")
+        }
 
         button.setOnClickListener {
             val newRecipe = RecipeData(
@@ -69,6 +91,23 @@ class AddRecipeFragment() : Fragment() {
 
 
             (requireActivity() as MainActivity).saveNewRecipe(newRecipe)
+        }
+    }
+
+
+    private fun saveImage(imageUri: Uri){
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+            val file = File(requireContext().filesDir, "${(requireActivity() as MainActivity).getLenRecipy()}.png")
+            val outputstream = FileOutputStream(file)
+
+            inputStream?.copyTo(outputstream)
+            inputStream?.close()
+            outputstream.close()
+            image.setImageBitmap((requireActivity() as MainActivity).loadSavedImage((requireActivity() as MainActivity).getLenRecipy()))
+        }
+        catch (e: Exception){
+            e.printStackTrace()
         }
     }
 

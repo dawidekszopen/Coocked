@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import com.example.mobilecookbook.MainActivity
@@ -57,12 +58,21 @@ class RecipeDetailsFragment : Fragment() {
 
         val editButton: Button = view.findViewById(R.id.EditPrzepis)
 
+        val image: ImageView = view.findViewById(R.id.imageR)
+
         nazwa.text = przepis.nazwa
         opis.text = przepis.opis
         skladniki.text = przepis.skladniki
         intrukcja.text = przepis.intrukcja
         ocena.rating = przepis.ocena
-        
+
+
+        val bitmap = (requireActivity() as MainActivity).loadSavedImage(arguments?.getInt("nrPrzepisu"))
+
+        if(bitmap != null){
+            image.setImageBitmap((requireActivity() as MainActivity).loadSavedImage(arguments?.getInt("nrPrzepisu")))
+        }
+
         ocena.setOnRatingBarChangeListener { _, rating, _ ->
             val newPrzepis = RecipeData(
                 przepis.nazwa,

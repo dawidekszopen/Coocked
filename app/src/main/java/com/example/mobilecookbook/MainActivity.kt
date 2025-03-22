@@ -2,6 +2,8 @@ package com.example.mobilecookbook
 
 
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -12,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.mobilecookbook.ui.AddRecipeFragment
 import com.example.mobilecookbook.ui.RecipeListFragment
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var MAINSP: SharedPreferences
@@ -51,11 +54,21 @@ class MainActivity : AppCompatActivity() {
               }
             }
 
-            supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, newFragment)
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.fadein,
+                    R.anim.fadeout
+                )
+                .replace(R.id.mainFrameLayout, newFragment)
                 .addToBackStack(null).commit()
         }
         else{
-            supportFragmentManager.beginTransaction().replace(R.id.mainFrameLayout, fragment)
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.fadein,
+                    R.anim.fadeout
+                )
+                .replace(R.id.mainFrameLayout, fragment)
                 .addToBackStack(null).commit()
         }
     }
@@ -106,5 +119,13 @@ class MainActivity : AppCompatActivity() {
         editorRecipe.putString("instrukcje", Przepis.intrukcja)
         editorRecipe.putFloat("ocena", Przepis.ocena)
         editorRecipe.apply()
+    }
+
+    fun loadSavedImage(id: Int?): Bitmap? {
+        val file = File(filesDir, "${id}.png")
+        if(file.exists()){
+            return BitmapFactory.decodeFile(file.absolutePath)
+        }
+        return null
     }
 }

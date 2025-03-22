@@ -16,6 +16,13 @@
         android:textSize="20dp"
         />
 
+    <ImageView
+        android:id="@+id/imageER"
+        android:layout_gravity="center"
+        android:src="@drawable/no_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
+
     <EditText
         android:layout_margin="10dp"
         android:textAlignment="center"
@@ -63,7 +70,7 @@
 
     <Button
         android:id="@+id/AddRecipeBtn"
-        android:text="Dodaj Pzepis"
+        android:text="Popraw Przepis"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
