@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         DodajPrzepis.setOnClickListener {
             replaceFragment(AddRecipeFragment())
         }
+
+
     }
 
     fun replaceFragment(fragment: Fragment, withArg: Boolean = false, nrPrzepisu: Int? = 0){

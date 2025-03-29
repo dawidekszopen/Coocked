@@ -8,7 +8,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mobilecookbook"
+        applicationId = rootProject.extra["defaultApplicationId"] as String
         minSdk = 28
         targetSdk = 35
         versionCode = 1

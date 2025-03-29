@@ -1,5 +1,6 @@
 package com.example.mobilecookbook
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ class RecipeList(private val mainActivity: MainActivity, private val onDoubleCli
         val hr = itemView.findViewById<View>(R.id.hr)
 
         val image = itemView.findViewById<ImageView>(R.id.image)
+
 
         private var lastClickTime = 0L
         private val doubleClickThreshold = 300L // 300ms na podwójne kliknięcie

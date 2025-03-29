@@ -63,8 +63,6 @@ class AddRecipeFragment() : Fragment() {
             }
         }
 
-
-
         val button: Button = view.findViewById(R.id.AddRecipeBtn)
 
 
